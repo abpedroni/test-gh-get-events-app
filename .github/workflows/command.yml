@@ -30,7 +30,7 @@ jobs:
 
       - name: commands
         if: ${{ steps.command.outputs.continue == 'true' }}
-        run: echo "Commands ${{ steps.command.outputs }}"
+        run: echo "Commands ${{ toJson(steps.command.outputs) }}"
       
       # conditionally run some logic here
       - name: ping
