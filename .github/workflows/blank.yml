@@ -31,7 +31,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: |
-          echo "Event, ${{ github.event }}"
+          echo "Event, ${{ toJson(github.event) }}"
           echo "event_name, ${{ github.event_name }}"
           echo "event_path, ${{ github.event_path }}"
 
