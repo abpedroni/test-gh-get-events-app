@@ -5,6 +5,7 @@ on:
 
 jobs:
   create_issue:
+    if: false
     name: Create team sync issue
     runs-on: ubuntu-latest
     permissions:
