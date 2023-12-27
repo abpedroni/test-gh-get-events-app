@@ -15,16 +15,27 @@ jobs:
   demo:
     runs-on: ubuntu-latest
     steps:
+      # Checkout your projects repository
+      - uses: actions/checkout@v3
       # execute IssueOps command logic, hooray!
       # this will be used to "gate" all future steps below
       - uses: github/command@v1.1.0
         id: command
         with:
           command: ".ping"
+          allowed_contexts: "pull_request,issue"
+          param_separator: "|"
 
       # run your custom logic for your project here - example seen below
 
+      - name: commands
+        if: ${{ steps.command.outputs.continue == 'true' }}
+        run: echo "Commands ${{ steps.command.outputs }}"
+      
       # conditionally run some logic here
       - name: ping
         if: ${{ steps.command.outputs.continue == 'true' }}
-        run: echo "I am going to ping some cool website now!"
+        run: |-
+            echo "I am going to ping some cool website now!"
+            echo "params: ${{ steps.command.outputs.params }}"
+        
