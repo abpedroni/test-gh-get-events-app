@@ -38,4 +38,16 @@ jobs:
         run: |-
             echo "I am going to ping some cool website now!"
             echo "params: ${{ steps.command.outputs.params }}"
+
+      - name: Add comment
+        run: gh issue comment "$NUMBER" --body "$BODY"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.issue.number }}
+          BODY: |-
+            This issue is available for anyone to work on. **Make sure to reference this issue in your pull request.**
+            :sparkles: Thank you for your contribution! :sparkles:              
+            Params: ${{ steps.command.outputs.params }}
+            
         
