@@ -50,19 +50,10 @@ jobs:
           echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
           echo "::set-output name=branch::${GITHUB_REF_NAME//\//\-}"
 
-      - name: Bump version and push tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v6.1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          tag_prefix: ${{ steps.vars.outputs.branch }}.
-          custom_tag: "${{ steps.vars.outputs.sha_short }}.${{ github.run_id }}"
-
       - name: Other variables
         id: other-vars
         run: |
-          echo "${{ steps.tag_version.outputs.new_tag }}" >> ./out/buildid
-          echo "docker-image=$(echo '${{ env.DOCKER_REGISTRY }}/${{ env.NAMESPACE }}/${{ env.API_NAME }}:${{ steps.tag_version.outputs.new_tag }}')" >> $GITHUB_ENV
+          echo "docker-image=$(echo '${{ env.DOCKER_REGISTRY }}/${{ env.NAMESPACE }}/${{ env.API_NAME }}:${{ steps.vars.outputs.sha_short }}.${{ github.run_id }}')" >> $GITHUB_ENV
 
       - name: 1Make Request
         uses: fjogeleit/http-request-action@v1
