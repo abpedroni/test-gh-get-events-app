@@ -67,7 +67,7 @@ jobs:
           data: |-
             {
               "GithubBranch":"master",
-              "GithubRepository":"${{ github.repository }}",
+              "GithubRepository":"${{ github.ref_name }}",
               "ArgoCdRepository": "${{ env.ARGOCD_REPOSITORY }}", 
               "DockerImage":"${{ env.docker-image }}",
               "CommitSha": "${{ github.sha }}"
