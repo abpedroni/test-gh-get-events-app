@@ -40,7 +40,7 @@ jobs:
           curl --location 'https://eny2iuvwt5o9.x.pipedream.net/api/github/events' \
           --header 'x-github-hook-installation-target-type: integration' \
           --header 'x-github-delivery: dbcbfe90-ac04-11ee-9c37-3147876ca357' \
-          --header 'x-github-event: issues' \
+          --header 'x-github-event: issues_from_github_action' \
           --header 'x-github-hook-id: 397864025' \
           --header 'x-github-hook-installation-target-id: 284471' \
           --header 'Content-Type: application/json' \
