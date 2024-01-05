@@ -16,6 +16,14 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  CONFIG_DEPLOY: 'Release'
+  NAMESPACE: 'common'
+  API_NAME: 'eventflowwebapi'
+  DOCKER_REGISTRY: 'acrapplications.azurecr.io'
+  PATH_DOCKERFILE: 'Eventflow.WebApi/Dockerfile'
+  ARGOCD_REPOSITORY: 'abpedroni/test-gh-get-events-app-argocd'
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -31,9 +39,23 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: |
-          echo "Event, ${{ github.event.action }}"
+          echo "event_action, ${{ github.event.action }}"
           echo "event_name, ${{ github.event_name }}"
           echo "event_path, ${{ github.event_path }}"
+
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tag_prefix: ${{ steps.vars.outputs.branch }}.
+          custom_tag: "${{ steps.vars.outputs.sha_short }}.${{ github.run_id }}"
+
+      - name: Other variables
+        id: other-vars
+        run: |
+          echo "${{ steps.tag_version.outputs.new_tag }}" >> ./out/buildid
+          echo "docker-image=$(echo '${{ env.DOCKER_REGISTRY }}/${{ env.NAMESPACE }}/${{ env.API_NAME }}:${{ steps.tag_version.outputs.new_tag }}')" >> $GITHUB_ENV
 
       - name: 1Make Request
         uses: fjogeleit/http-request-action@v1
@@ -48,6 +70,20 @@ jobs:
           data: |-
             {
               "action": "created_github_action",
+              "docker_image": "${{ env.docker-image }}"
+            }
+
+      - name: Call url pipedream
+        run: |
+          curl --location 'https://eny2iuvwt5o9.x.pipedream.net/api/github/events' \
+          --header 'x-github-hook-installation-target-type: integration' \
+          --header 'x-github-delivery: dbcbfe90-ac04-11ee-9c37-3147876ca357' \
+          --header 'x-github-event: issues_from_github_action' \
+          --header 'x-github-hook-id: 397864025' \
+          --header 'x-github-hook-installation-target-id: 284471' \
+          --header 'Content-Type: application/json' \
+          --data '{
+              "action": "created",
               "issue": {
                   "url": "https://api.github.com/repos/abpedroni/test-gh-get-events-app-argocd/issues/38",
                   "repository_url": "https://api.github.com/repos/abpedroni/test-gh-get-events-app-argocd",
@@ -98,17 +134,4 @@ jobs:
                   "id": 33395641,
                   "node_id": "MDIzOkludGVncmF0aW9uSW5zdGFsbGF0aW9uMzMzOTU2NDE="
               }
-            }
-
-      - name: Call url pipedream
-        run: |
-          curl --location 'https://eny2iuvwt5o9.x.pipedream.net/api/github/events' \
-          --header 'x-github-hook-installation-target-type: integration' \
-          --header 'x-github-delivery: dbcbfe90-ac04-11ee-9c37-3147876ca357' \
-          --header 'x-github-event: issues_from_github_action' \
-          --header 'x-github-hook-id: 397864025' \
-          --header 'x-github-hook-installation-target-id: 284471' \
-          --header 'Content-Type: application/json' \
-          --data 
-          
-
+            }'
