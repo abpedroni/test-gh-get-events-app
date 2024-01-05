@@ -62,74 +62,76 @@ jobs:
           method: 'POST'
           customHeaders: |-
             {
-              "Content-Type": "application/json", 
-              "x-github-hook-installation-target-type": "integration"
+              "Content-Type": "application/json"
             }
           data: |-
             {
-              "action": "created_github_action",
-              "docker_image": "${{ env.docker-image }}"
+              "GithubBranch":"master",
+              "GithubRepository":"${{ github.repository }}",
+              "ArgoCdRepository": "${{ env.ARGOCD_REPOSITORY }}", 
+              "DockerImage":"${{ env.docker-image }}",
+              "CommitSha": "${{ github.sha }}"
             }
 
-      - name: Call url pipedream
-        run: |
-          curl --location 'https://eny2iuvwt5o9.x.pipedream.net/api/github/events' \
-          --header 'x-github-hook-installation-target-type: integration' \
-          --header 'x-github-delivery: dbcbfe90-ac04-11ee-9c37-3147876ca357' \
-          --header 'x-github-event: issues_from_github_action' \
-          --header 'x-github-hook-id: 397864025' \
-          --header 'x-github-hook-installation-target-id: 284471' \
-          --header 'Content-Type: application/json' \
-          --data '{
-              "action": "created",
-              "issue": {
-                  "url": "https://api.github.com/repos/abpedroni/test-gh-get-events-app-argocd/issues/38",
-                  "repository_url": "https://api.github.com/repos/abpedroni/test-gh-get-events-app-argocd",
-                  "labels_url": "https://api.github.com/repos/abpedroni/test-gh-get-events-app-argocd/issues/38/labels{/name}",
-                  "comments_url": "https://api.github.com/repos/abpedroni/test-gh-get-events-app-argocd/issues/38/comments",
-                  "events_url": "https://api.github.com/repos/abpedroni/test-gh-get-events-app-argocd/issues/38/events",
-                  "html_url": "https://github.com/abpedroni/test-gh-get-events-app-argocd/pull/38",
-                  "id": 2064437579,
-                  "node_id": "PR_kwDOK-RUxM5jKPxx",
-                  "number": 38,
-                  "title": "chore(deps): dev/bump eventflowwebapi to master.4f199a0.7293914525.",
-                  "state": "closed",
-                  "locked": false,
-                  "assignee": null,
-                  "assignees": [],
-                  "milestone": null,
-                  "comments": 1,
-                  "created_at": "2024-01-03T17:59:59Z",
-                  "updated_at": "2024-01-03T18:01:08Z",
-                  "closed_at": "2024-01-03T18:00:30Z",
-                  "author_association": "OWNER",
-                  "active_lock_reason": null,
-                  "draft": false,
-                  "pull_request": {
-                      "url": "https://api.github.com/repos/abpedroni/test-gh-get-events-app-argocd/pulls/38",
-                      "html_url": "https://github.com/abpedroni/test-gh-get-events-app-argocd/pull/38",
-                      "diff_url": "https://github.com/abpedroni/test-gh-get-events-app-argocd/pull/38.diff",
-                      "patch_url": "https://github.com/abpedroni/test-gh-get-events-app-argocd/pull/38.patch",
-                      "merged_at": "2024-01-03T18:00:30Z"
-                  },
-                  "reactions": {
-                      "url": "https://api.github.com/repos/abpedroni/test-gh-get-events-app-argocd/issues/38/reactions",
-                      "total_count": 0,
-                      "+1": 1,
-                      "-1": 1,
-                      "laugh": 0,
-                      "hooray": 0,
-                      "confused": 0,
-                      "heart": 0,
-                      "rocket": 0,
-                      "eyes": 0
-                  },
-                  "timeline_url": "https://api.github.com/repos/abpedroni/test-gh-get-events-app-argocd/issues/38/timeline",
-                  "performed_via_github_app": null,
-                  "state_reason": null
-              },
-              "installation": {
-                  "id": 33395641,
-                  "node_id": "MDIzOkludGVncmF0aW9uSW5zdGFsbGF0aW9uMzMzOTU2NDE="
-              }
-            }'
+      # - name: Call url pipedream
+      #   run: |
+      #     curl --location 'https://eny2iuvwt5o9.x.pipedream.net/api/github/events' \
+      #     --header 'x-github-hook-installation-target-type: integration' \
+      #     --header 'x-github-delivery: dbcbfe90-ac04-11ee-9c37-3147876ca357' \
+      #     --header 'x-github-event: issues_from_github_action' \
+      #     --header 'x-github-hook-id: 397864025' \
+      #     --header 'x-github-hook-installation-target-id: 284471' \
+      #     --header 'Content-Type: application/json' \
+      #     --data '{
+      #         "action": "created",
+      #         "issue": {
+      #             "url": "https://api.github.com/repos/abpedroni/test-gh-get-events-app-argocd/issues/38",
+      #             "repository_url": "https://api.github.com/repos/abpedroni/test-gh-get-events-app-argocd",
+      #             "labels_url": "https://api.github.com/repos/abpedroni/test-gh-get-events-app-argocd/issues/38/labels{/name}",
+      #             "comments_url": "https://api.github.com/repos/abpedroni/test-gh-get-events-app-argocd/issues/38/comments",
+      #             "events_url": "https://api.github.com/repos/abpedroni/test-gh-get-events-app-argocd/issues/38/events",
+      #             "html_url": "https://github.com/abpedroni/test-gh-get-events-app-argocd/pull/38",
+      #             "id": 2064437579,
+      #             "node_id": "PR_kwDOK-RUxM5jKPxx",
+      #             "number": 38,
+      #             "title": "chore(deps): dev/bump eventflowwebapi to master.4f199a0.7293914525.",
+      #             "state": "closed",
+      #             "locked": false,
+      #             "assignee": null,
+      #             "assignees": [],
+      #             "milestone": null,
+      #             "comments": 1,
+      #             "created_at": "2024-01-03T17:59:59Z",
+      #             "updated_at": "2024-01-03T18:01:08Z",
+      #             "closed_at": "2024-01-03T18:00:30Z",
+      #             "author_association": "OWNER",
+      #             "active_lock_reason": null,
+      #             "draft": false,
+      #             "pull_request": {
+      #                 "url": "https://api.github.com/repos/abpedroni/test-gh-get-events-app-argocd/pulls/38",
+      #                 "html_url": "https://github.com/abpedroni/test-gh-get-events-app-argocd/pull/38",
+      #                 "diff_url": "https://github.com/abpedroni/test-gh-get-events-app-argocd/pull/38.diff",
+      #                 "patch_url": "https://github.com/abpedroni/test-gh-get-events-app-argocd/pull/38.patch",
+      #                 "merged_at": "2024-01-03T18:00:30Z"
+      #             },
+      #             "reactions": {
+      #                 "url": "https://api.github.com/repos/abpedroni/test-gh-get-events-app-argocd/issues/38/reactions",
+      #                 "total_count": 0,
+      #                 "+1": 1,
+      #                 "-1": 1,
+      #                 "laugh": 0,
+      #                 "hooray": 0,
+      #                 "confused": 0,
+      #                 "heart": 0,
+      #                 "rocket": 0,
+      #                 "eyes": 0
+      #             },
+      #             "timeline_url": "https://api.github.com/repos/abpedroni/test-gh-get-events-app-argocd/issues/38/timeline",
+      #             "performed_via_github_app": null,
+      #             "state_reason": null
+      #         },
+      #         "installation": {
+      #             "id": 33395641,
+      #             "node_id": "MDIzOkludGVncmF0aW9uSW5zdGFsbGF0aW9uMzMzOTU2NDE="
+      #         }
+      #       }'
