@@ -25,9 +25,10 @@ jobs:
           echo "GITHUB_WORKSPACE, ${{ github.workspace }}"
           ls
 
-      # - name: Make the script files executable
-      #   run: chmod +x my-script.sh
+      - name: Make the script files executable
+        run: 
 
       - name: Run the scripts
-        run: |
-          ./my-script.sh parametro1
+        run: |-
+          chmod +x docker_version_replacer.sh
+          ./docker_version_replacer.sh parametro1
