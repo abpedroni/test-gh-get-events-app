@@ -20,3 +20,6 @@ jobs:
       - name: Run a one-line script
         run: |
           echo "GITHUB_WORKSPACE, ${{ github.workspace }}"
+
+      - name: Call a Bash Script
+        run:  bash ${GITHUB_WORKSPACE}/scripts/example.sh my-folder-name
