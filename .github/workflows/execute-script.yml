@@ -26,8 +26,8 @@ jobs:
           ls
 
       - name: Make the script files executable
-        run: chmod +x my-script.sh
+        run: chmod +x docker_version_replacer.sh
 
       - name: Run the scripts
         run: |
-          ./my-script.sh
+          ./docker_version_replacer.sh
