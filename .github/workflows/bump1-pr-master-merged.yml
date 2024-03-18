@@ -1,0 +1,45 @@
+# This is a basic workflow to help you get started with Actions
+
+name: test - bump 1 - merged
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  # push:
+  #   branches: [ "release/**" ]
+  #   paths-ignore:
+  pull_request: 
+    branches: [ "master" ]
+    paths-ignore:
+      - '.github/**' # Exclude changes in .github folder
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    if: ${{ github.event.pull_request.merged == true }} 
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: pull request
+        ##if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+        run: |
+          echo "pull request merged"
+          echo "event name ${{ github.event_name }}"
+          echo "event action ${{ github.event.action }}"
+          echo "pull request merged ${{ github.event.pull_request.merged }}"
+          echo "pull request head ref ${{ github.event.pull_request.head.ref }}"
+          echo "pull request base ref ${{ github.event.pull_request.base.ref }}"
+          echo "pull request number ${{ github.event.pull_request.number }}"
+          echo "pull request title ${{ github.event.pull_request.title }}"
+          echo "pull request body ${{ github.event.pull_request.body }}"
+
+
+      
