@@ -10,9 +10,9 @@ on:
     paths-ignore:
       - '.github/**' # Exclude changes in .github folder
   pull_request:
-    branches: [ "release/*" ]
-    paths-ignore:
-      - '.github/**' # Exclude changes in .github folder
+  ##  branches: [ "release/*" ]
+  ##  paths-ignore:
+  ##    - '.github/**' # Exclude changes in .github folder
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
