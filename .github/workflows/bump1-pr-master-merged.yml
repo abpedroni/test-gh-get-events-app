@@ -5,12 +5,12 @@ name: test - bump 1 - merged
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "master" branch
-  # push:
-  #   branches: [ "master" ]
-  #   paths-ignore:
-  #     - '.github/**' # Exclude changes in .github folder
-  pull_request:
+  push:
     branches: [ "master" ]
+    paths-ignore:
+      - '.github/**' # Exclude changes in .github folder
+  pull_request:
+    branches: [ "release/**" ]
     paths-ignore:
       - '.github/**' # Exclude changes in .github folder
   # Allows you to run this workflow manually from the Actions tab
