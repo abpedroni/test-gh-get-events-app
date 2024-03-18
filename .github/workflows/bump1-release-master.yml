@@ -5,30 +5,34 @@ name: test - bump 1 - Release
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "master" branch
-  push:
+  # push:
+  #   branches: [ "release/**" ]
+  #   paths-ignore:
+  pull_request: 
     branches: [ "release/**" ]
+    types:
+      - closed
     paths-ignore:
       - '.github/**' # Exclude changes in .github folder
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
-permissions: 
-  actions: write
-  contents: write
-  deployments: write
-  pull-requests: write
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
+    if: ${{ github.event.pull_request.merged == true }} 
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
+
+      - name: pull request
+        if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+        run: echo "pull request merged"
 
       - name: Bump version and push tag
         id: tag_version
