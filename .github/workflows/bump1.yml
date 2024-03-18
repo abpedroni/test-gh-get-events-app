@@ -37,3 +37,10 @@ jobs:
           #tag_prefix: ${{ steps.vars.outputs.branch }}. #A prefix to the tag name (default: v).
           #custom_tag: ${{ steps.vars.outputs.sha_short }} #Custom tag name. If specified, it overrides bump settings.
           release_branches: "master"
+
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
