@@ -5,9 +5,10 @@ name: test - bump 1 - merged
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "master" branch
-  # push:
-  #   branches: [ "release/**" ]
-  #   paths-ignore:
+  push:
+    branches: [ "master" ]
+    paths-ignore:
+      - '.github/**' # Exclude changes in .github folder
   pull_request: 
     branches: [ "master" ]
     paths-ignore:
@@ -20,7 +21,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    if: ${{ github.event.pull_request.merged == true }} 
+    ##if: ${{ github.event.pull_request.merged == true }} 
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -39,7 +40,6 @@ jobs:
           echo "pull request base ref ${{ github.event.pull_request.base.ref }}"
           echo "pull request number ${{ github.event.pull_request.number }}"
           echo "pull request title ${{ github.event.pull_request.title }}"
-          echo "pull request body ${{ github.event.pull_request.body }}"
 
 
       
