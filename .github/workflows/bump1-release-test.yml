@@ -5,8 +5,8 @@ name: test - release - bump 1 - IN TEST
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "master" branch
-  # push:
-  #   branches: [ "release/**" ]
+  push:
+    branches: [ "release/**", "release.*" ]
   # pull_request:
   #   types: [labeled]
   # Allows you to run this workflow manually from the Actions tab
@@ -22,7 +22,6 @@ permissions:
 jobs:
   # This workflow contains a single job called "build"
   build:
-    ##if: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'ready-for-release') }}
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -31,19 +30,52 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      - name: Bump version and push tag
-        id: tag_version
+      - name: 1-Bump version and push tag 
+        id: tag_version1
         uses: mathieudutour/github-tag-action@v6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           dry_run: true
-          #tag_prefix: ${{ steps.vars.outputs.branch }}. #A prefix to the tag name (default: v).
-          #custom_tag: ${{ steps.vars.outputs.sha_short }} #Custom tag name. If specified, it overrides bump settings.
-          release_branches: "master,release/*"
+          release_branches: "master,release.*"
 
-      # - name: Create a GitHub release
-      #   uses: ncipollo/release-action@v1
-      #   with:
-      #     tag: ${{ steps.tag_version.outputs.new_tag }}
-      #     name: Release ${{ steps.tag_version.outputs.new_tag }}
-      #     body: ${{ steps.tag_version.outputs.changelog }}
+      - name: 2-Bump version and push tag
+        id: tag_version2
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dry_run: true
+          release_branches: "release.*"
+
+      - name: 3-Bump version and push tag
+        id: tag_version3
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dry_run: true
+          release_branches: "release//*"
+
+      - name: 4-Bump version and push tag
+        id: tag_version4
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dry_run: true
+          release_branches: "release/.*"
+
+      - name: 5-Bump version and push tag
+        id: tag_version5
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dry_run: true
+          release_branches: "release/.*,.master"
+
+      - name: 6-Bump version and push tag
+        id: tag_version6
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          dry_run: true
+          release_branches: ".*"
+
+          
